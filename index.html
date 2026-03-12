@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>João Victor — Desenvolvedor Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #0f0f18;
+    --surface: #13131e;
+    --surface2: #1a1a28;
+    --border: #ffffff10;
+    --accent: #6c63ff;
+    --accent2: #a78bfa;
+    --accent3: #38bdf8;
+    --text: #e8e8f0;
+    --muted: #6b6b85;
+    --green: #4ade80;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* GRID BG */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.8);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent2); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 60px 80px;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+    top: -200px;
+    right: -200px;
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    bottom: -100px;
+    left: -100px;
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  h1 .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin-bottom: 44px;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(108,99,255,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(108,99,255,0.5);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent2);
+    background: rgba(167,139,250,0.05);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-num span { color: var(--accent2); }
+
+  .stat-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 60px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    max-width: 500px;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: 60px;
+  }
+
+  /* SOBRE */
+  #sobre {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .sobre-avatar {
+    width: 280px;
+    height: 280px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--surface2), var(--surface));
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sobre-avatar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(56,189,248,0.08));
+  }
+
+  .sobre-text p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .tech-tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    color: var(--accent2);
+    font-weight: 500;
+    transition: border-color 0.2s;
+  }
+
+  .tech-tag:hover { border-color: var(--accent2); }
+
+  /* PROJETOS */
+  .projetos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .projeto-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .projeto-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(108,99,255,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(108,99,255,0.1);
+  }
+
+  .projeto-thumb {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .projeto-thumb-ramos {
+    background: linear-gradient(135deg, #1a0a2e, #2d1b4e);
+  }
+
+  .projeto-thumb-ramos::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(167,139,250,0.2), transparent 60%);
+  }
+
+  .projeto-thumb-eletro {
+    background: linear-gradient(135deg, #0a1a2e, #0d2a4e);
+  }
+
+  .projeto-thumb-eletro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 50%, rgba(56,189,248,0.2), transparent 60%);
+  }
+
+  .projeto-thumb-placeholder {
+    background: linear-gradient(135deg, #0f1a10, #132013);
+  }
+
+  .projeto-thumb-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(74,222,128,0.15), transparent 60%);
+  }
+
+  .projeto-body {
+    padding: 24px;
+  }
+
+  .projeto-tipo {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .projeto-body h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .projeto-body p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .projeto-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .projeto-tag {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .projeto-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: gap 0.2s;
+  }
+
+  .projeto-link:hover { gap: 10px; }
+
+  /* SERVICOS */
+  #servicos {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .servicos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .servico-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .servico-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .servico-card:hover {
+    border-color: rgba(108,99,255,0.3);
+    transform: translateY(-4px);
+  }
+
+  .servico-card:hover::before { opacity: 1; }
+
+  .servico-icon {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .servico-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .servico-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* CONTATO */
+  .contato-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .contato-inner h2 { margin-bottom: 16px; }
+  .contato-inner .section-desc { margin: 0 auto 48px; }
+
+  .contato-cards {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .contato-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 28px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    min-width: 220px;
+  }
+
+  .contato-card:hover {
+    border-color: var(--accent2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(108,99,255,0.15);
+  }
+
+  .contato-card-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .contato-card-info small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+  }
+
+  .contato-card-info strong {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 32px 60px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero, section { padding: 100px 24px 60px; }
+    .sobre-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; }
+    .contato-cards { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">JV<span>.</span>dev</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-tag">Disponível para novos projetos</div>
+
+  <h1>
+    João Victor
+    <span class="line2">Dev Web.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Criação de sites, e-commerces e soluções digitais para pequenas e médias empresas. Do design à entrega final.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#projetos" class="btn-primary">
+      Ver projetos →
+    </a>
+    <a href="#contato" class="btn-secondary">
+      Entrar em contato
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">2<span>+</span></div>
+      <div class="stat-label">Sites entregues</div>
+    </div>
+    <div>
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Clientes satisfeitos</div>
+    </div>
+    <div>
+      <div class="stat-num">3<span>+</span></div>
+      <div class="stat-label">Serviços oferecidos</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="sobre-grid">
+    <div>
+      <div class="sobre-avatar">👨‍💻</div>
+    </div>
+    <div class="sobre-text">
+      <span class="section-tag">Sobre mim</span>
+      <h2>Olá, sou o João Victor</h2>
+      <p>
+        Tenho 18 anos e estou cursando Análise e Desenvolvimento de Sistemas (ADS). Apaixonado por tecnologia e pelo impacto que um bom site pode ter nos negócios.
+      </p>
+      <p>
+        Transformo ideias em sites profissionais e funcionais, ajudando empresas a terem uma presença digital que gera resultados de verdade. Desde sites institucionais até e-commerces completos.
+      </p>
+      <div class="tech-stack">
+        <span class="tech-tag">HTML & CSS</span>
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">TypeScript</span>
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">MySQL</span>
+        <span class="tech-tag">WordPress</span>
+        <span class="tech-tag">WooCommerce</span>
+        <span class="tech-tag">Nuvemshop</span>
+        <span class="tech-tag">Figma</span>
+        <span class="tech-tag">SEO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <span class="section-tag reveal">Portfólio</span>
+  <h2 class="reveal">Projetos concluídos</h2>
+  <p class="section-desc reveal">Trabalhos reais entregues a clientes. Cada projeto com foco em resultado e qualidade.</p>
+
+  <div class="projetos-grid">
+
+    <div class="projeto-card reveal">
+      <div class="projeto-thumb projeto-thumb-ramos">🧵</div>
+      <div class="projeto-body">
+        <div class="projeto-tipo">E-commerce · Moda</div>
+        <h3>Ramos Tecidos</h3>
+        <p>Loja virtual completa para venda de tecidos. Layout responsivo, catálogo de produtos e integração com meios de pagamento.</p>
+        <div class="projeto-tags">
+          <span class="projeto-tag">E-commerce</span>
+          <span class="projeto-tag">WordPress</span>
+          <span class="projeto-tag">WooCommerce</span>
+          <span class="projeto-tag">Python</span>
+          <span class="projeto-tag">MySQL</span>
+          <span class="projeto-tag">TypeScript</span>
+        </div>
+        <a href="#" class="projeto-link">Ver projeto →</a>
+      </div>
+    </div>
+
+    <div class="projeto-card reveal">
+      <div class="projeto-thumb projeto-thumb-eletro">⚡</div>
+      <div class="projeto-body">
+        <div class="projeto-tipo" style="color: #f59e0b;">🔄 Em andamento</div>
+        <h3>Eletro Serviços</h3>
+        <p>Projeto em desenvolvimento. Em breve disponível para visualização.</p>
+        <div class="projeto-tags">
+          <span class="projeto-tag">Site Institucional</span>
+          <span class="projeto-tag">NF-e</span>
+        </div>
+        <a href="#contato" class="projeto-link" style="color: var(--muted); cursor: default;">Em andamento...</a>
+      </div>
+    </div>
+
+    <div class="projeto-card reveal" style="border-style: dashed; opacity: 0.5;">
+      <div class="projeto-thumb projeto-thumb-placeholder">＋</div>
+      <div class="projeto-body">
+        <div class="projeto-tipo">Em breve</div>
+        <h3>Seu projeto aqui</h3>
+        <p>Quer ter seu site ou e-commerce neste portfólio? Entre em contato e vamos conversar sobre o seu projeto.</p>
+        <div class="projeto-tags">
+          <span class="projeto-tag">?</span>
+        </div>
+        <a href="#contato" class="projeto-link">Falar comigo →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <span class="section-tag reveal">O que ofereço</span>
+  <h2 class="reveal">Serviços</h2>
+  <p class="section-desc reveal">Soluções completas para a sua presença digital, do zero à entrega.</p>
+
+  <div class="servicos-grid">
+
+    <div class="servico-card reveal">
+      <span class="servico-icon">🛍️</span>
+      <h3>E-commerce Completo</h3>
+      <p>Criação de lojas virtuais com carrinho, checkout, integração com Pix e cartão, e painel de gestão de pedidos.</p>
+    </div>
+
+    <div class="servico-card reveal">
+      <span class="servico-icon">🌐</span>
+      <h3>Site Institucional</h3>
+      <p>Sites profissionais para apresentar sua empresa, captar clientes e aparecer no Google com SEO básico.</p>
+    </div>
+
+    <div class="servico-card reveal">
+      <span class="servico-icon">🛒</span>
+      <h3>Mercado Livre</h3>
+      <p>Criação de conta, cadastro de anúncios e configuração completa para você começar a vender no Mercado Livre.</p>
+    </div>
+
+    <div class="servico-card reveal">
+      <span class="servico-icon">🧾</span>
+      <h3>Nota Fiscal (NF-e)</h3>
+      <p>Configuração do sistema de emissão de nota fiscal para o seu negócio operar de forma regular e profissional.</p>
+    </div>
+
+    <div class="servico-card reveal">
+      <span class="servico-icon">🎨</span>
+      <h3>Design & Identidade</h3>
+      <p>Criação de layouts, banners e identidade visual para o seu site ou redes sociais usando Figma e Canva.</p>
+    </div>
+
+    <div class="servico-card reveal">
+      <span class="servico-icon">🔧</span>
+      <h3>Manutenção de Sites</h3>
+      <p>Atualização de conteúdo, correção de problemas e suporte contínuo para manter seu site sempre funcionando.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="contato-inner">
+    <span class="section-tag reveal">Vamos conversar</span>
+    <h2 class="reveal">Entre em contato</h2>
+    <p class="section-desc reveal">Tem um projeto em mente? Me chama no WhatsApp ou manda um e-mail. Respondo rápido!</p>
+
+    <div class="contato-cards">
+      <a href="https://wa.me/5511970544745" class="contato-card reveal" target="_blank">
+        <span class="contato-card-icon">💬</span>
+        <div class="contato-card-info">
+          <small>WhatsApp</small>
+          <strong>(11) 97054-4745</strong>
+        </div>
+      </a>
+      <a href="mailto:ghsinfor7@gmail.com" class="contato-card reveal">
+        <span class="contato-card-icon">✉️</span>
+        <div class="contato-card-info">
+          <small>E-mail</small>
+          <strong>ghsinfor7@gmail.com</strong>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 João Victor · Desenvolvedor Web · Feito com dedicação 🚀</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav active link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+   
