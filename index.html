@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>João Victor — Desenvolvedor Web</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -744,7 +746,7 @@
           <span class="projeto-tag">MySQL</span>
           <span class="projeto-tag">TypeScript</span>
         </div>
-        <a href="#" class="projeto-link">Ver projeto →</a>
+        <a href="https://ramostecidos.com.br" class="projeto-link" target="_blank">Ver projeto →</a>
       </div>
     </div>
 
@@ -753,25 +755,60 @@
       <div class="projeto-body">
         <div class="projeto-tipo" style="color: #f59e0b;">🔄 Em andamento</div>
         <h3>Eletro Serviços</h3>
-        <p>Projeto em desenvolvimento. Em breve disponível para visualização.</p>
+      </div>
+    </div>
+
+    <div class="projeto-card reveal" style="border-color: rgba(245,158,11,0.2);">
+      <div class="projeto-thumb" style="background: linear-gradient(135deg, #1a1200, #2d2000);">
+        <span style="position:relative;z-index:1;">🛒</span>
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(245,158,11,0.15),transparent 60%);"></div>
+      </div>
+      <div class="projeto-body">
+        <div class="projeto-tipo" style="color: #f59e0b;">🔄 Em andamento · E-commerce</div>
+        <h3>Loja Virtual</h3>
+        <p>E-commerce completo em desenvolvimento. Integração com pagamentos, catálogo de produtos e painel administrativo.</p>
         <div class="projeto-tags">
-          <span class="projeto-tag">Site Institucional</span>
-          <span class="projeto-tag">NF-e</span>
+          <span class="projeto-tag">E-commerce</span>
+          <span class="projeto-tag">WooCommerce</span>
+          <span class="projeto-tag">JavaScript</span>
         </div>
         <a href="#contato" class="projeto-link" style="color: var(--muted); cursor: default;">Em andamento...</a>
       </div>
     </div>
 
-    <div class="projeto-card reveal" style="border-style: dashed; opacity: 0.5;">
-      <div class="projeto-thumb projeto-thumb-placeholder">＋</div>
+    <div class="projeto-card reveal" style="border-color: rgba(56,189,248,0.2);">
+      <div class="projeto-thumb" style="background: linear-gradient(135deg, #001a20, #002d38);">
+        <span style="position:relative;z-index:1;">📱</span>
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(56,189,248,0.15),transparent 60%);"></div>
+      </div>
       <div class="projeto-body">
-        <div class="projeto-tipo">Em breve</div>
-        <h3>Seu projeto aqui</h3>
-        <p>Quer ter seu site ou e-commerce neste portfólio? Entre em contato e vamos conversar sobre o seu projeto.</p>
+        <div class="projeto-tipo" style="color: #38bdf8;">🔄 Em andamento · Aplicativo Web</div>
+        <h3>App Web</h3>
+        <p>Aplicação web com painel de controle, autenticação de usuários e integração com banco de dados.</p>
         <div class="projeto-tags">
-          <span class="projeto-tag">?</span>
+          <span class="projeto-tag">TypeScript</span>
+          <span class="projeto-tag">Python</span>
+          <span class="projeto-tag">MySQL</span>
         </div>
-        <a href="#contato" class="projeto-link">Falar comigo →</a>
+        <a href="#contato" class="projeto-link" style="color: var(--muted); cursor: default;">Em andamento...</a>
+      </div>
+    </div>
+
+    <div class="projeto-card reveal" style="border-color: rgba(74,222,128,0.2);">
+      <div class="projeto-thumb" style="background: linear-gradient(135deg, #001a08, #002d10);">
+        <span style="position:relative;z-index:1;">🎨</span>
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(74,222,128,0.15),transparent 60%);"></div>
+      </div>
+      <div class="projeto-body">
+        <div class="projeto-tipo" style="color: #4ade80;">🔄 Em andamento · Landing Page</div>
+        <h3>Landing Page</h3>
+        <p>Página de alta conversão com design moderno, animações e otimização para SEO e velocidade de carregamento.</p>
+        <div class="projeto-tags">
+          <span class="projeto-tag">HTML & CSS</span>
+          <span class="projeto-tag">JavaScript</span>
+          <span class="projeto-tag">SEO</span>
+        </div>
+        <a href="#contato" class="projeto-link" style="color: var(--muted); cursor: default;">Em andamento...</a>
       </div>
     </div>
 
@@ -855,22 +892,48 @@
   <p>© 2026 João Victor · Desenvolvedor Web · Feito com dedicação 🚀</p>
 </footer>
 
+
 <script>
-  // Scroll reveal
+  // Reveal imediato para elementos já visíveis + scroll para os demais
   const reveals = document.querySelectorAll('.reveal');
+
+  const triggerReveal = (el, delay = 0) => {
+    setTimeout(() => el.classList.add('visible'), delay);
+  };
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        triggerReveal(entry.target, i * 80);
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
   reveals.forEach(el => observer.observe(el));
+
+  // Forçar reveal dos elementos já visíveis no carregamento
+  window.addEventListener('load', () => {
+    reveals.forEach((el, i) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        triggerReveal(el, i * 60);
+      }
+    });
+  });
 
   // Nav active link
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
   window.addEventListener('scroll', () => {
     let current = '';
-   
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--text)' : '';
+    });
+  });
+</script>
+</body>
+</html>
