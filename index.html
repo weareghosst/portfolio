@@ -21,14 +21,29 @@
     --muted2: #6e7c8a;
     --accent: #f0f6fc;
   }
+  
+  :root.light-mode {
+    --bg: #ffffff;
+    --bg2: #f5f5f5;
+    --bg3: #ebebeb;
+    --border: rgba(99,120,157,0.15);
+    --border2: rgba(99,120,157,0.25);
+    --blue: #3b82f6;
+    --blue2: #2563eb;
+    --blue3: #1d4ed8;
+    --text: #1a1a1a;
+    --muted: #666666;
+    --muted2: #999999;
+    --accent: #000000;
+  }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.6; overflow-x: hidden; }
+  html { scroll-behavior: smooth; transition: background-color .3s, color .3s; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.6; overflow-x: hidden; transition: background-color .3s, color .3s; }
 
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--blue3); border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); transition: background-color .3s; }
+  ::-webkit-scrollbar-thumb { background: var(--blue3); border-radius: 3px; transition: background-color .3s; }
 
   /* NAV */
   nav {
@@ -38,6 +53,10 @@
     background: rgba(13,17,23,0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    transition: background-color .3s, border-color .3s;
+  }
+  .light-mode nav {
+    background: rgba(255,255,255,0.85);
   }
   .nav-logo { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
   .nav-logo span { color: var(--blue); }
@@ -46,6 +65,26 @@
   .nav-links a:hover { color: var(--accent); }
   .nav-cta { background: var(--blue); color: #fff; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; transition: background .2s; }
   .nav-cta:hover { background: var(--blue2); color: #fff !important; }
+
+  /* TEMA TOGGLE */
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all .2s;
+  }
+  .theme-toggle:hover {
+    border-color: var(--blue);
+    color: var(--blue2);
+  }
 
   /* HERO */
   .hero {
@@ -202,6 +241,7 @@
     <li><a href="#servicos">Serviços</a></li>
     <li><a href="#contato" class="nav-cta">Contato</a></li>
   </ul>
+  <button class="theme-toggle" id="themeToggle" title="Alternar tema">🌙</button>
 </nav>
 
 <!-- HERO -->
@@ -326,19 +366,18 @@
 
 
     <!-- PROJETO 4 — Eletro Services -->
-    <a class="project-card fade-in" href="#contato" style="transition-delay:.24s">
+    <a class="project-card fade-in" href="https://eletro-local-1zc2ilexx-weareghosts-projects.vercel.app/" target="_blank" rel="noopener" style="transition-delay:.24s">
       <div class="card-top">
         <div class="card-icon">⚡</div>
         <span class="card-status status-done">Concluído</span>
       </div>
       <div class="card-cat">Sistema · Gestão</div>
       <div class="card-title">Eletro Services</div>
-      <p class="card-desc">Sistema completo de gestão de estoque com dashboard, controle de produtos, registro de vendas, geração de recibo PDF e exportação para Excel.</p>
+      <p class="card-desc">Sistema completo de gestão de estoque com dashboard, controle de produtos, registro de vendas e exportação para Excel.</p>
       <div class="card-tags">
-        <span class="card-tag">React</span>
-        <span class="card-tag">Vite</span>
-        <span class="card-tag">localStorage</span>
-        <span class="card-tag">PDF</span>
+        <span class="card-tag">Node</span>
+        <span class="card-tag">TypeScript</span>
+        <span class="card-tag">Supabase</span>
         <span class="card-tag">Excel</span>
       </div>
       <span class="card-link">Ver projeto <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -480,6 +519,28 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Tema Dark/Light Mode
+  const themeToggle = document.getElementById('themeToggle');
+  const htmlElement = document.documentElement;
+  
+  // Verifica tema salvo ou preferência do sistema
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  if (savedTheme) {
+    htmlElement.classList.toggle('light-mode', savedTheme === 'light');
+    themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+  } else if (!prefersDark) {
+    htmlElement.classList.add('light-mode');
+    themeToggle.textContent = '🌙';
+  }
+  
+  themeToggle.addEventListener('click', () => {
+    const isLight = htmlElement.classList.toggle('light-mode');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    themeToggle.textContent = isLight ? '🌙' : '☀️';
+  });
 </script>
 </body>
 </html>
